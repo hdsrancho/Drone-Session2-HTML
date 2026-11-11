@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Session-2: Degrees of Freedom in Aircraft</title>
+<style>
+:root{color-scheme:dark;--bg:#050d24;--ink:#fff;--mut:#c9d3ea;--card:#0a1838;--line:#1c3066;--acc:#ff8a2a;--a2:#ff5a5f;--ok:#30a46c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+
+
+html,body{height:100%;margin:0}
+body{display:flex;flex-direction:column;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.top,.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px clamp(16px,5vw,64px);color:var(--mut);font-size:14px}
+.pr{height:3px;background:var(--line)}.pr i{display:block;height:100%;width:0;background:var(--acc);transition:width .4s}
+.deck{flex:1;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;overflow-y:auto;padding:20px clamp(16px,5vw,64px);opacity:0;visibility:hidden;transform:translateX(28px);transition:opacity .4s,transform .4s,visibility .4s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.g{display:grid;gap:24px;max-width:1100px;margin:0 auto;grid-template-columns:minmax(0,1fr)}
+@media(min-width:860px){.g{grid-template-columns:5fr 7fr;align-items:center;min-height:100%}}
+h1{font-size:clamp(34px,6vw,64px);line-height:1.05;margin:.2em 0;color:var(--ink)}h2{font-size:clamp(26px,4vw,40px);margin:0 0 .4em;color:var(--ink)}
+.eye{color:var(--acc);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:13px}
+p{margin:.4em 0}.m{color:var(--mut)}ul{padding-left:1.1em}li{margin:.5em 0}
+.cv{width:100%;aspect-ratio:16/10;max-height:52vh;display:block;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.ctl label{display:grid;grid-template-columns:minmax(90px,1.2fr) 3fr 44px;align-items:center;gap:10px;font-size:14px;margin:6px 0}
+.ctl b{font-weight:500;text-align:right;color:var(--mut)}input[type=range]{width:100%;accent-color:var(--acc)}
+button{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 14px;cursor:pointer}
+button.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center}
+.chip{padding:4px 12px;border:1px solid var(--line);border-radius:99px;font-size:14px;transition:.3s}.chip.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.ro{font:13px/1.5 ui-monospace,Menlo,monospace;color:var(--mut);min-height:2.6em}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;margin:10px 0}.flow span{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:5px 9px}.flow i{color:var(--acc);font-style:normal;animation:p 1.2s infinite}@keyframes p{50%{opacity:.2}}
+table{border-collapse:collapse;width:100%;font-size:15px}td,th{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left}th{color:var(--mut);font-weight:500}
+.tw{overflow-x:auto}
+</style></head><body>
+<div class="top"><b>Session-2</b><span id="ct">1 / 10</span></div><div class="pr"><i id="pb"></i></div>
+<div class="deck">
+
+<section class="slide" id="s1"><div class="g"><div><div class="eye">Session-2</div><h1>Degrees of Freedom in Aircraft</h1><p class="m">Linear motion, rotation, forces, torques and control.</p><p class="m">Use the arrow keys or the buttons below.</p></div><canvas class="cv"></canvas></div></section>
+
+<section class="slide" id="s2"><div class="g"><div><h2>Degree of Freedom</h2><p>A rigid body moves in six independent ways: three translations along axes and three rotations about them. Every flight is a mix of these six.</p><div class="row"><span class="chip">Surge</span><span class="chip">Sway</span><span class="chip">Heave</span><span class="chip">Roll</span><span class="chip">Pitch</span><span class="chip">Yaw</span></div><p class="ro" id="r2"></p></div><canvas class="cv"></canvas></div></section>
+
+<section class="slide" id="s3"><div class="g"><div><h2>Linear Motions</h2><ul><li><b>Surge</b>: forward and back along the x axis</li><li><b>Sway</b>: side to side along the y axis</li><li><b>Heave</b>: up and down along the z axis</li></ul><div class="ctl" data-s="s3" data-c="x|Surge|-2|2|.1|0;y|Sway|-2|2|.1|0;z|Heave|-2|2|.1|0"></div><div class="row"><button class="auto" data-s="s3">Auto play</button></div></div><canvas class="cv"></canvas></div></section>
+
+<section class="slide" id="s4"><div class="g"><div><h2>Forces Acting on Aircraft</h2><ul><li><b>Lift</b> up, <b>Weight</b> down</li><li><b>Thrust</b> forward, <b>Drag</b> back</li></ul><p class="m">Steady level flight needs lift = weight and thrust = drag. Set thrust to 50 for balance, then push it up or down.</p><div class="ctl" data-s="s4" data-c="T|Thrust|0|100|1|50"></div><p class="ro" id="r4"></p></div><canvas class="cv"></canvas></div></section>
+
+<section class="slide" id="s5"><div class="g"><div><h2>Lift and Thrust in Rotor-based Aircraft</h2><p>Rotors push air down. Thrust acts perpendicular to the rotor disk. Hover when thrust = weight. Tilting splits thrust into lift (T cos θ) and forward thrust (T sin θ).</p><div class="ctl" data-s="s5" data-c="T|Throttle|0|100|1|50;a|Tilt °|-30|30|1|0"></div><p class="ro" id="r5"></p></div><canvas class="cv"></canvas></div></section>
+
+<section class="slide" id="s6"><div class="g"><div><h2>Lift and Thrust in Fixed-wing Aircraft</h2><p>The wing deflects air to make lift, which needs forward speed. The propeller or jet gives thrust forward, only to beat drag. Raise the angle of attack: lift grows until the wing stalls near 15°.</p><div class="ctl" data-s="s6" data-c="a|Angle of attack °|-5|25|.5|6"></div><p class="ro" id="r6"></p></div><canvas class="cv"></canvas></div></section>
+
+<section class="slide" id="s7"><div class="g"><div><h2>Rotational Motions</h2><ul><li><b>Roll</b>: about the x axis, wing tips up and down</li><li><b>Pitch</b>: about the y axis, nose up and down</li><li><b>Yaw</b>: about the z axis, nose left and right</li></ul><div class="ctl" data-s="s7" data-c="r|Roll °|-45|45|1|0;p|Pitch °|-45|45|1|0;w|Yaw °|-45|45|1|0"></div><div class="row"><button class="auto" data-s="s7">Auto play</button></div></div><canvas class="cv"></canvas></div></section>
+
+<section class="slide" id="s8"><div class="g"><div><h2>Torques Acting on Aircraft</h2><p>Torque = force × distance from the center of gravity. Control surfaces make force far from it: ailerons roll, elevator pitches, rudder yaws. Deflect a surface and the aircraft rotates until the restoring moment balances the torque.</p><div class="ctl" data-s="s8" data-c="cr|Aileron (roll)|-1|1|.1|0;cp|Elevator (pitch)|-1|1|.1|0;cw|Rudder (yaw)|-1|1|.1|0"></div><div class="row"><button id="rs8">Zero and reset</button></div><p class="ro" id="r8"></p></div><canvas class="cv"></canvas></div></section>
+
+<section class="slide" id="s9"><div class="g"><div><h2>Control Systems in Aircraft</h2><p>Sensors measure the attitude, a controller compares it with the target, and actuators move the surfaces. Turn the autopilot off and hit a gust to see the difference.</p><div class="flow"><span>Target</span><i>→</i><span>Controller</span><i>→</i><span>Surfaces</span><i>→</i><span>Aircraft</span><i>→</i><span>Sensors</span><i>↺</i></div><div class="ctl" data-s="s9" data-c="tg|Target pitch °|-25|25|1|0"></div><div class="row"><button id="ap9" class="on">Autopilot on</button><button id="gu9">Gust</button></div><p class="ro" id="r9"></p></div><canvas class="cv"></canvas></div></section>
+
+<section class="slide" id="s10"><div style="max-width:1100px;margin:auto"><h2>Summary</h2><div class="tw"><table><tr><th>Motion</th><th>Axis</th><th>Type</th><th>Main control</th></tr><tr><td>Surge</td><td>x</td><td>Linear</td><td>Thrust, drag</td></tr><tr><td>Sway</td><td>y</td><td>Linear</td><td>Rudder, sideslip</td></tr><tr><td>Heave</td><td>z</td><td>Linear</td><td>Lift, weight</td></tr><tr><td>Roll</td><td>x</td><td>Rotation</td><td>Ailerons</td></tr><tr><td>Pitch</td><td>y</td><td>Rotation</td><td>Elevator</td></tr><tr><td>Yaw</td><td>z</td><td>Rotation</td><td>Rudder</td></tr></table></div><p class="m">Forces move the aircraft, torques turn it, and control systems close the loop.</p></div></section>
+<section class="slide" id="s11"><div class="g"><div><div class="eye">Session-2</div><h1>Thank you</h1><p>Degrees of Freedom in Aircraft</p><p class="m">Questions?</p></div><canvas class="cv"></canvas></div></section>
+
+</div>
+<div class="bar"><button id="pv">‹ Prev</button><span class="m">← → keys</span><button id="nx">Next ›</button></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],PI=Math.PI;
+const S={s2:{},s3:{x:0,y:0,z:0},s4:{T:50,v:70,h:0},s5:{T:50,a:0,vx:0,vy:0,h:0,ph:0,gx:0},s6:{a:6},s7:{r:0,p:0,w:0},s8:{r:0,p:0,w:0,vr:0,vp:0,vw:0,cr:0,cp:0,cw:0},s9:{tg:0,ap:1,th:0,om:0,hist:[]}};
+$$('.ctl').forEach(e=>{const s=e.dataset.s;e.innerHTML=e.dataset.c.split(';').map(c=>{const[k,l,a,b,st,v]=c.split('|');S[s][k]=+v;return`<label><span>${l}</span><input type="range" data-k="${k}" min="${a}" max="${b}" step="${st}" value="${v}"><b>${v}</b></label>`}).join('');
+e.oninput=ev=>{const i=ev.target;S[s][i.dataset.k]=+i.value;i.nextElementSibling.textContent=i.value}});
+function setv(s,k,v){S[s][k]=v;const i=$(`#${s} [data-k="${k}"]`);i.value=v;i.nextElementSibling.textContent=(+v).toFixed(1)}
+$$('.auto').forEach(b=>b.onclick=()=>{const s=b.dataset.s;S[s].auto=!S[s].auto;b.classList.toggle('on',S[s].auto)});
+let K={};const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function C(c){const d=devicePixelRatio||1,w=c.clientWidth,h=c.clientHeight;if(c.width!=w*d||c.height!=h*d){c.width=w*d;c.height=h*d}const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);x.lineWidth=1.5;x.lineJoin='round';x.font='13px system-ui';return[x,w,h]}
+const PL=[[.35,[[3,0,0],[0,.25,0],[-3,0,0],[0,-.25,0]]],[.6,[[.8,.2,0],[-.6,3,0],[-1.3,3,0],[-.6,.2,0]]],[.6,[[.8,-.2,0],[-.6,-3,0],[-1.3,-3,0],[-.6,-.2,0]]],[.5,[[-2.2,.1,0],[-2.8,1.2,0],[-3.1,1.2,0],[-2.9,.1,0]]],[.5,[[-2.2,-.1,0],[-2.8,-1.2,0],[-3.1,-1.2,0],[-2.9,-.1,0]]],[.75,[[-2,0,0],[-3,0,-1.1],[-3.3,0,-1.1],[-2.9,0,0]]]];
+function P(x,w,h,s){const g=k=>(s[k]||0)*PI/180,cr=Math.cos(g('r')),sr=Math.sin(g('r')),cp=Math.cos(g('p')),sp=Math.sin(g('p')),cw=Math.cos(g('w')),sw=Math.sin(g('w')),sc=Math.min(w/13,h/7),ca=Math.cos(.7),sa=Math.sin(.7),ce=Math.cos(.5),se=Math.sin(.5);
+const Q=(X,Y,U)=>[w/2+(Y*ca+X*sa)*sc,h/2+((X*ca-Y*sa)*se-U*ce)*sc];
+const T=([a,b,c])=>{let y=b*cr-c*sr,z=b*sr+c*cr,X=a*cp+z*sp;z=-a*sp+z*cp;const x1=X*cw-y*sw,Y=X*sw+y*cw;return Q(x1+(s.x||0),Y+(s.y||0),-(z+(s.z||0)))};
+x.strokeStyle=K.line;x.beginPath();for(let i=-4;i<=4;i+=2){let a=Q(i,-5,-2.6),b=Q(i,5,-2.6);x.moveTo(...a);x.lineTo(...b);a=Q(-5,i,-2.6);b=Q(5,i,-2.6);x.moveTo(...a);x.lineTo(...b)}x.stroke();
+PL.forEach(([al,p])=>{x.beginPath();p.forEach((v,i)=>x[i?'lineTo':'moveTo'](...T(v)));x.closePath();x.globalAlpha=al;x.fillStyle='#6ea8ff';x.fill();x.globalAlpha=1;x.strokeStyle=K.ink;x.stroke()});
+const sf=s.sf;if(sf){const rad=d=>d*PI/180,fl=(a,b,dx,dy,dz)=>{x.beginPath();[a,b,[b[0]+dx,b[1]+dy,b[2]+dz],[a[0]+dx,a[1]+dy,a[2]+dz]].forEach((v,i)=>x[i?'lineTo':'moveTo'](...T(v)));x.closePath();x.globalAlpha=.95;x.fillStyle='#ff8a2a';x.fill();x.globalAlpha=1;x.strokeStyle=K.ink;x.stroke()};const ad=rad(sf.a*30),ed=rad(sf.e*25),rd=rad(sf.r*30);
+fl([-.99,1.74,0],[-1.26,2.86,0],-.5*Math.cos(ad),0,-.5*Math.sin(ad));fl([-.99,-1.74,0],[-1.26,-2.86,0],-.5*Math.cos(ad),0,.5*Math.sin(ad));
+fl([-2.9,.1,0],[-3.1,1.2,0],-.5*Math.cos(ed),0,-.5*Math.sin(ed));fl([-2.9,-.1,0],[-3.1,-1.2,0],-.5*Math.cos(ed),0,-.5*Math.sin(ed));
+fl([-2.9,0,0],[-3.3,0,-1.1],-.5*Math.cos(rd),.5*Math.sin(rd),0);
+x.fillStyle='#ff8a2a';[['Aileron',[-1.8,2.9,0]],['Elevator',[-3.6,1.3,0]],['Rudder',[-3.9,0,-1.1]]].forEach(([n,v])=>{const p=T(v);x.fillText(n,p[0]+6,p[1]-4)})}
+[['x',[4.5,0,0],'#e5484d'],['y',[0,4,0],'#30a46c'],['z',[0,0,3],'#6ea8ff']].forEach(([n,v,c])=>{const a=T([0,0,0]),b=T(v);x.strokeStyle=c;x.beginPath();x.moveTo(...a);x.lineTo(...b);x.stroke();x.fillStyle=c;x.fillText(n,b[0]+4,b[1]-4)})}
+function side(x,cx,cy,sc,deg){x.save();x.translate(cx,cy);x.rotate(deg*PI/180);x.fillStyle=K.ink;x.beginPath();x.ellipse(0,0,50*sc,9*sc,0,0,7);x.fill();x.beginPath();x.moveTo(-40*sc,-4*sc);x.lineTo(-54*sc,-24*sc);x.lineTo(-44*sc,-24*sc);x.lineTo(-26*sc,-4*sc);x.fill();x.fillStyle=K.acc;x.fillRect(-16*sc,6*sc,36*sc,5*sc);x.restore()}
+function arr(x,a,b,c,d,col,l){const n=Math.hypot(c-a,d-b);if(n<2)return;x.strokeStyle=x.fillStyle=col;x.beginPath();x.moveTo(a,b);x.lineTo(c,d);x.stroke();const t=Math.atan2(d-b,c-a);x.beginPath();x.moveTo(c,d);x.lineTo(c-9*Math.cos(t-.4),d-9*Math.sin(t-.4));x.lineTo(c-9*Math.cos(t+.4),d-9*Math.sin(t+.4));x.fill();x.fillText(l,c+6,d-6)}
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v)),D={};
+D.s1=(x,w,h,t)=>P(x,w,h,{r:20*Math.sin(t*.9),p:10*Math.sin(t*.7),w:25*Math.sin(t*.5),z:.3*Math.sin(t*1.3)});
+D.s11=D.s1;const N=['Surge: forward and back','Sway: side to side','Heave: up and down','Roll: about the x axis','Pitch: about the y axis','Yaw: about the z axis'];let lm=-1;
+D.s2=(x,w,h,t)=>{const m=Math.floor(t/2.4)%6,p=Math.sin(PI*(t%2.4)/2.4),s={};s['xyzrpw'[m]]=p*(m<3?2:35);if(m!=lm){lm=m;$$('#s2 .chip').forEach((c,i)=>c.classList.toggle('on',i==m));$('#r2').textContent=N[m]}P(x,w,h,s)};
+D.s3=(x,w,h,t)=>{const s=S.s3;if(s.auto){setv('s3','x',2*Math.sin(t));setv('s3','y',2*Math.sin(t*.7+1));setv('s3','z',1.2*Math.sin(t*1.3))}P(x,w,h,{x:s.x,y:s.y,z:-s.z})};
+D.s7=(x,w,h,t)=>{const s=S.s7;if(s.auto){setv('s7','r',35*Math.sin(t));setv('s7','p',25*Math.sin(t*.8+1));setv('s7','w',35*Math.sin(t*.6+2))}P(x,w,h,s)};
+D.s4=(x,w,h,t,dt)=>{const s=S.s4,Dr=.01*s.v*s.v,L=Dr;s.v=Math.max(0,s.v+(s.T-Dr)*dt*.6);s.h=cl(s.h+(L-50)*dt*.01,-1,1);s.cx=(s.cx||0)+s.v*dt*.8;
+x.strokeStyle=K.line;for(let i=0;i<6;i++){const px=((i*190-s.cx)%(w+120)+w+120)%(w+120)-60;x.beginPath();x.ellipse(px,30+(i*47)%90,34,9,0,0,7);x.stroke()}
+const cx=w/2,cy=h/2-s.h*h*.15,f=Math.min(.9,h/300);side(x,cx,cy,1.2,-cl((L-50)/5,-15,15));
+arr(x,cx,cy,cx,cy-L*f,'#6ea8ff','Lift');arr(x,cx,cy,cx,cy+50*f,'#e5484d','Weight');arr(x,cx+62,cy,cx+62+s.T*f,cy,'#30a46c','Thrust');arr(x,cx-62,cy,cx-62-Dr*f,cy,'#e8a317','Drag');
+$('#r4').textContent=`speed ${s.v|0}  lift ${L|0}  weight 50\nthrust ${s.T}  drag ${Dr|0}  ${Math.abs(L-50)<3?'level flight':L>50?'climbing':'sinking'}`};
+D.s5=(x,w,h,t,dt)=>{const s=S.s5,a=s.a*PI/180,V=s.T*Math.cos(a),H=s.T*Math.sin(a);s.vy+=((V-50)*.04-s.vy*1.5)*dt;s.h=cl(s.h+s.vy*dt,-1,1);s.vx+=(H*.5-s.vx*.8)*dt;s.gx+=s.vx*dt*30;s.ph+=s.T*dt*.4;
+const cx=w/2,cy=h/2-s.h*h*.15,f=Math.min(.9,h/300);x.strokeStyle=K.line;x.beginPath();x.moveTo(0,h-18);x.lineTo(w,h-18);for(let i=0;i<14;i++){const px=((i*60-s.gx)%(w+60)+w+60)%(w+60);x.moveTo(px,h-18);x.lineTo(px-8,h-8)}x.stroke();
+x.save();x.translate(cx,cy);x.rotate(a);x.fillStyle=K.ink;x.fillRect(-30,-8,60,16);[-62,62].forEach(r=>{x.fillRect(r-1.5,-26,3,18);x.fillStyle=K.acc;x.beginPath();x.ellipse(r,-27,40*Math.abs(Math.cos(s.ph+(r>0?1:0))),3,0,0,7);x.fill();x.fillStyle=K.ink});x.restore();
+arr(x,cx,cy,cx+H*f,cy-V*f,'#6ea8ff','T');arr(x,cx,cy,cx,cy-V*f,'#30a46c','T cos θ');arr(x,cx,cy,cx+H*f,cy,'#e8a317','T sin θ');arr(x,cx,cy,cx,cy+50*f,'#e5484d','W');
+$('#r5').textContent=`lift ${V|0} vs weight 50  forward thrust ${H|0}\n${Math.abs(V-50)<3?'hovering':V>50?'climbing':'sinking'}`};
+D.s6=(x,w,h,t)=>{const a=S.s6.a,cl_=a<=15?.11*a+.25:Math.max(.5,1.9-.14*(a-15)),st=a>15,cx=w/2,cy=h/2,ch=Math.min(w*.4,200);
+x.setLineDash([14,10]);x.lineDashOffset=-t*90;x.strokeStyle=K.acc;for(let i=-4;i<=4;i++){if(!i)continue;const y0=cy+i*h*.09,up=i<0;x.beginPath();for(let px=0;px<=w;px+=6){const u=(px-cx)/(ch*.6);let y=y0+(up?-1:.4)*Math.exp(-u*u)*(h*.05+a*1.2);if(up&&st&&px>cx)y+=Math.sin(px*.15+t*14)*(6+i*-2)*(px-cx)/ch;x.lineTo(px,y)}x.stroke()}x.setLineDash([]);
+x.save();x.translate(cx,cy);x.rotate(-a*PI/180);x.fillStyle=K.ink;x.beginPath();for(let i=0;i<=40;i++){const u=i/40,th=.6*(.2969*Math.sqrt(u)-.126*u-.3516*u*u+.2843*u**3-.1015*u**4)*ch*.2,cm=ch*.05*Math.sin(PI*u);x[i?'lineTo':'moveTo']((.5-u)*ch,-th-cm)}for(let i=40;i>=0;i--){const u=i/40,th=.6*(.2969*Math.sqrt(u)-.126*u-.3516*u*u+.2843*u**3-.1015*u**4)*ch*.2,cm=ch*.05*Math.sin(PI*u);x.lineTo((.5-u)*ch,th-cm)}x.fill();x.restore();
+arr(x,cx,cy,cx,cy-cl_*h*.22,'#6ea8ff','Lift');
+$('#r6').textContent=`angle ${a}°  lift coefficient ${cl_.toFixed(2)}\n${st?'STALL: flow separates, lift drops':'attached flow'}`};
+D.s8=(x,w,h,t,dt)=>{const s=S.s8;[['r','vr'],['p','vp'],['w','vw']].forEach(([k,v])=>{s[v]+=(s['c'+k]*160-3*s[v]-4*s[k])*dt;s[k]+=s[v]*dt});P(x,w,h,{...s,sf:{a:s.cr,e:s.cp,r:s.cw}});
+$('#r8').textContent=`roll ${s.r|0}°  pitch ${s.p|0}°  yaw ${s.w|0}°\nmore deflection, more torque, more rotation`};
+$('#rs8').onclick=()=>{const s=S.s8;['cr','cp','cw'].forEach(k=>setv('s8',k,0));Object.assign(s,{r:0,p:0,w:0,vr:0,vp:0,vw:0})};
+D.s9=(x,w,h,t,dt)=>{const s=S.s9;let u=0;for(let i=0;i<4;i++){u=s.ap?cl(30*(s.tg-s.th)-9*s.om,-60,60):0;s.om+=(u-.8*s.om)*dt/4;s.th+=s.om*dt/4}s.hist.push(s.th);if(s.hist.length>300)s.hist.shift();
+const pw=w*.66,my=h/2,k=h/100;x.strokeStyle=K.line;x.beginPath();x.moveTo(0,my);x.lineTo(pw,my);x.stroke();x.setLineDash([5,5]);x.strokeStyle=K.a2;x.beginPath();x.moveTo(0,my-s.tg*k);x.lineTo(pw,my-s.tg*k);x.stroke();x.setLineDash([]);
+x.strokeStyle=K.acc;x.beginPath();s.hist.forEach((v,i)=>x[i?'lineTo':'moveTo'](i*pw/300,cl(my-v*k,4,h-4)));x.stroke();x.fillStyle=K.mut;x.fillText('pitch angle over time (dashed: target)',8,16);
+side(x,w*.84,my,.8,-s.th);$('#r9').textContent=`pitch ${s.th.toFixed(1)}°  elevator ${(u/60*100|0)}%  autopilot ${s.ap?'on':'off'}`};
+$('#ap9').onclick=e=>{S.s9.ap=!S.s9.ap;e.target.classList.toggle('on',S.s9.ap);e.target.textContent='Autopilot '+(S.s9.ap?'on':'off')};
+$('#gu9').onclick=()=>S.s9.om+=70;
+const sl=$$('.slide');let cur=0,last=0;
+function show(i){cur=cl(i,0,sl.length-1);sl.forEach((e,j)=>e.classList.toggle('on',j==cur));$('#ct').textContent=`${cur+1} / ${sl.length}`;$('#pb').style.width=(cur+1)/sl.length*100+'%';$('#pv').disabled=!cur;$('#nx').disabled=cur==sl.length-1;try{history.replaceState(null,'','#s'+(cur+1))}catch(e){}}
+$('#pv').onclick=()=>show(cur-1);$('#nx').onclick=()=>show(cur+1);
+addEventListener('keydown',e=>{if(e.target.type=='range')return;if(e.key=='ArrowRight'||e.key==' ')show(cur+1);if(e.key=='ArrowLeft')show(cur-1)});
+let tx=0;$('.deck').addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});$('.deck').addEventListener('touchend',e=>{if(e.target.type=='range')return;const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>70)show(cur+(d<0?1:-1))},{passive:true});
+function loop(ms){const t=ms/1000,dt=Math.min(.05,t-last);last=t;const id='s'+(cur+1),c=$('#'+id+' canvas');if(c&&D[id]){K={ink:css('--ink'),mut:css('--mut'),line:css('--line'),acc:css('--acc'),a2:css('--a2')};const[x,w,h]=C(c);D[id](x,w,h,t,dt)}requestAnimationFrame(loop)}
+const m=/^#s(\d+)$/.exec(location.hash);show(m?+m[1]-1:0);requestAnimationFrame(loop);
+</script></body></html>
